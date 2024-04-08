@@ -13,50 +13,58 @@ type EnvConfig = {
 };
 
 app.get("/search", async (c) => {
-  const { UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL } =
-    env<EnvConfig>(c);
+  try {
+    const { UPSTASH_REDIS_REST_TOKEN, UPSTASH_REDIS_REST_URL } =
+      env<EnvConfig>(c);
 
-  const start = performance.now();
-  // ----------------------------
+    const start = performance.now();
+    // ----------------------------
 
-  const redis = new Redis({
-    token: UPSTASH_REDIS_REST_TOKEN,
-    url: UPSTASH_REDIS_REST_URL,
-  });
+    const redis = new Redis({
+      token: UPSTASH_REDIS_REST_TOKEN,
+      url: UPSTASH_REDIS_REST_URL,
+    });
 
-  const query = c.req.query("q");
+    const query = c.req.query("q")?.toUpperCase();
 
-  if (!query) {
-    return c.json({ message: "Inavlid search query" }, { status: 400 });
-  }
+    if (!query) {
+      return c.json({ message: "Inavlid search query" }, { status: 400 });
+    }
 
-  const res = [];
+    const res = [];
 
-  // zrank gives us the rank of the term in the sorted set
+    // zrank gives us the rank of the term in the sorted set
 
-  const rank = await redis.zrank("terms", query);
+    const rank = await redis.zrank("terms", query);
 
-  if (rank !== null && rank !== undefined) {
-    const temp = await redis.zrange<string[]>("terms", rank, rank + 100);
+    if (rank !== null && rank !== undefined) {
+      const temp = await redis.zrange<string[]>("terms", rank, rank + 200);
 
-    for (const el of temp) {
-      if (!el.startsWith(query)) {
-        break;
-      }
+      for (const el of temp) {
+        if (!el.startsWith(query)) {
+          break;
+        }
 
-      if (el.endsWith("*")) {
-        res.push(el.substring(0, el.length - 1));
+        if (el.endsWith("*")) {
+          res.push(el.substring(0, el.length - 1));
+        }
       }
     }
+
+    // ----------------------------
+    const end = performance.now();
+
+    return c.json({
+      results: res,
+      duration: end - start,
+    });
+  } catch (error) {
+    console.error("Error", error);
+    return c.json(
+      { results: [], message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
-
-  // ----------------------------
-  const end = performance.now();
-
-  return c.json({
-    results: res,
-    duration: end - start,
-  });
 });
 
 export const GET = handle(app);
