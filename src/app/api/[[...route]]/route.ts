@@ -42,6 +42,8 @@ app.get("/search", async (c) => {
     if (rank !== null && rank !== undefined) {
       const temp = await redis.zrange<string[]>("terms", rank, rank + 200);
 
+      console.log("temp", temp)
+
       for (const el of temp) {
         if (!el.startsWith(query)) {
           break;

@@ -72,7 +72,7 @@ export default function Home() {
 
               {searchResults?.results ? (
                 <>
-                  <div className="h-px w-full bg-zinc-200">
+                  <div className="h-full w-full bg-zinc-100">
                     <p className="p-2 text-xs text-zinc-500">
                       Found {searchResults?.results.length} results in{" "}
                       {searchResults?.duration.toFixed(0)}ms
