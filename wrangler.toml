@@ -1,5 +1,5 @@
 name = "fastapi"
-compatibility_date = "2024-4-08"
+compatibility_date = "2024-04-08"
 
 [vars]
 UPSTASH_REDIS_REST_URL = "https://ideal-hawk-44825.upstash.io"
