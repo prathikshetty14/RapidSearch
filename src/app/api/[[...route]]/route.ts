@@ -37,12 +37,10 @@ app.get("/search", async (c) => {
 
     // zrank gives us the rank of the term in the sorted set
 
-    const rank = await redis.zrank("terms", query);
+    const rank = await redis.zrank("terms2", query);
 
     if (rank !== null && rank !== undefined) {
-      const temp = await redis.zrange<string[]>("terms", rank, rank + 200);
-
-      console.log("temp", temp)
+      const temp = await redis.zrange<string[]>("terms2", rank, rank + 200);
 
       for (const el of temp) {
         if (!el.startsWith(query)) {

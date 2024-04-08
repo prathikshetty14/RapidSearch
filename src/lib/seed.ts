@@ -1,9 +1,8 @@
 import { Redis } from "@upstash/redis";
 
 const redis = new Redis({
-  url: "https://ideal-hawk-44825.upstash.io",
-  token:
-    "Aa8ZASQgYjdkMjE4MzktNGQwNS00MTg3LTkwYWEtNDViOTEzN2Q0NWZiMDMzOTAxMDNkM2M0NDQ0Mjk3MmQzZjI3MThmNzQyODc=",
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
 const countryList = [
@@ -265,12 +264,12 @@ countryList.forEach((country) => {
   for (let i = 0; i <= term.length; i++) {
     terms.push({ score: 0, member: term.substring(0, i) });
   }
-  terms.push({ score: 0, member: term + "*"});
+  terms.push({ score: 0, member: term + "*" });
 
   const populateDb = async () => {
     // @ts-expect-error
     await redis.zadd("terms2", ...terms);
-  }
+  };
 
   populateDb();
 });
