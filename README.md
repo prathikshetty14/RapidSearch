@@ -1,4 +1,11 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## RapidSearch
+
+A high performance API built with Hono, Next.js, Cloudflare. Type a query below and get your results in milliseconds.
+
+## Project Overview
+
+![screencapture-fastapi-amber-vercel-app-2024-04-23-12_26_04](https://github.com/prathikshetty14/RapidSearch/assets/63280396/ddf981a7-aa83-469d-a3ba-4f907988a0e5)
+
 
 ## Getting Started
 
